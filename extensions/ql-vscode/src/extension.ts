@@ -9,7 +9,7 @@ import {
   Uri,
   window as Window,
   env,
-  window
+  window,
 } from 'vscode';
 import { LanguageClient } from 'vscode-languageclient';
 import * as path from 'path';
@@ -39,7 +39,6 @@ import {
 } from './distribution';
 import * as helpers from './helpers';
 import { assertNever } from './helpers-pure';
-import { spawnIdeServer } from './ide-server';
 import { InterfaceManager } from './interface';
 import { WebviewReveal } from './interface-utils';
 import { ideServerLogger, logger, queryServerLogger } from './logging';
@@ -80,6 +79,8 @@ const errorStubs: Disposable[] = [];
  */
 let isInstallingOrUpdatingDistribution = false;
 
+const extensionId = 'GitHub.vscode-codeql'; // TODO: Is there a better way of obtaining this?
+
 /**
  * If the user tries to execute vscode commands after extension activation is failed, give
  * a sensible error message.
@@ -90,7 +91,6 @@ function registerErrorStubs(excludedCommands: string[], stubGenerator: (command:
   // Remove existing stubs
   errorStubs.forEach(stub => stub.dispose());
 
-  const extensionId = 'GitHub.vscode-codeql'; // TODO: Is there a better way of obtaining this?
   const extension = extensions.getExtension(extensionId);
   if (extension === undefined) {
     throw new Error(`Can't find extension ${extensionId}`);
@@ -420,10 +420,13 @@ async function activateWithInstalledDistribution(
 
   ctx.subscriptions.push(tmpDirDisposal);
 
+  const extension = extensions.getExtension(extensionId);
+  const languageServer = path.join(extension!.extensionPath, '../../codeql-sloth/language-server.sh');
+
   logger.log('Initializing CodeQL language server.');
   const client = new LanguageClient(
     'CodeQL Language Server',
-    () => spawnIdeServer(qlConfigurationListener),
+    { command: languageServer },
     {
       documentSelector: [
         { language: 'ql', scheme: 'file' },

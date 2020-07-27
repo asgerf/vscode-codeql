@@ -1,0 +1,3 @@
+[submodule "codeql-sloth"]
+	path = codeql-sloth
+	url = https://github.com/asgerf/codeql-sloth
