@@ -389,6 +389,12 @@
             "Never create a QL pack when a new CodeQL database is added."
           ],
           "description": "Ask the user to generate a QL pack when a new CodeQL database is downloaded."
+        },
+        "codeQL.internal.languageServerOverride": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "[For internal use only] Path to a language server executable to use instead of the one bundled with the CodeQL CLI",
+          "scope": "machine"
         }
       }
     },

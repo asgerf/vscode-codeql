@@ -878,11 +878,15 @@ async function activateWithInstalledDistribution(
 
   ctx.subscriptions.push(tmpDirDisposal);
 
+  const languageServerOverride = workspace.getConfiguration().get<string>("codeQL.internal.languageServerOverride");
+
   void extLogger.log("Initializing CodeQL language server.");
   const client = new LanguageClient(
     "codeQL.lsp",
     "CodeQL Language Server",
-    () => spawnIdeServer(qlConfigurationListener),
+    languageServerOverride
+      ? { command: languageServerOverride }
+      : () => spawnIdeServer(qlConfigurationListener),
     {
       documentSelector: [
         { language: "ql", scheme: "file" },
