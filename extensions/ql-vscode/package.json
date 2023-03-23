@@ -4,7 +4,7 @@
   "description": "CodeQL for Visual Studio Code",
   "author": "GitHub",
   "private": true,
-  "version": "1.8.6",
+  "version": "99.99.99-stop-autoupdating-please",
   "publisher": "GitHub",
   "license": "MIT",
   "icon": "media/VS-marketplace-CodeQL-icon.png",
